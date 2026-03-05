@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnSubmit = document.querySelector('#formulario button[type="submit"]');
     const btnReset = document.querySelector('#formulario button[type="reset"]');
     const spinner = document.querySelector('#spinner');
+    const inputCc = document.querySelector('#cc'); //
     const listoParaEnviar = {
         email : '',
         asunto : '',
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     inputEmail.addEventListener('blur', validar);
     inputAsunto.addEventListener('blur', validar);
     textAreaMensaje.addEventListener('blur', validar);
+    inputCc.addEventListener('blur', validarOpcional);
     formulario.addEventListener('submit', enviar);
     btnReset.addEventListener('click', function(event) {
         event.preventDefault();
@@ -44,8 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
         },3000);
     }
 
+    // parte del CC: opcional
+    function validarOpcional(event){
+        if(event.target.value.trim() === '') {
+            limpiarAlerta(event.target.parentElement);
+            return;
+        }
+        else if(event.target.id === 'cc' && !validarEmail(event.target.value)) {
+            alerta('El Email no es valido', event.target.parentElement)
+            return;
+        }
+        else{
+            limpiarAlerta(event.target.parentElement);
+        }
+    };
+    // parte del formulario obligatorio
     function validar(event) {
-        //console.log(event.target.parentElement.nextElementSibling); // esto es trash, quedo porque quiero dejar algo de junkcode
         if(event.target.value.trim() === '') {
             alerta(`El campo ${event.target.id} es obligatorio`, event.target.parentElement);
             listoParaEnviar[event.target.name] = '';
